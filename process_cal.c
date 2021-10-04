@@ -213,17 +213,17 @@ void print_events(int from_yy, int from_mm, int from_dd, int to_yy, int to_mm, i
 		sscanf(entry[n].dt_end, "%8dT%2d%2d", &end_date, &hour_end, &minute_end);
 
 		if (hour_end < 12) {
-			printf("%2d:%02d am to %2d:%02d am: %s [%s]\n", hour_start, minute_start, hour_end, minute_end, entry[n].summary, entry[n].location);
+			printf("%2d:%02d am to %2d:%02d am: %s {{%s}}\n", hour_start, minute_start, hour_end, minute_end, entry[n].summary, entry[n].location);
 		} else if (hour_start > 12) {
-			printf("%2d:%02d pm to %2d:%02d pm: %s [%s]\n", hour_start - 12, minute_start, hour_end - 12, minute_end, entry[n].summary, entry[n].location);
+			printf("%2d:%02d pm to %2d:%02d pm: %s {{%s}}\n", hour_start - 12, minute_start, hour_end - 12, minute_end, entry[n].summary, entry[n].location);
 		} else if (hour_start < 12 && hour_end > 12) {
-			printf("%2d:%02d am to %2d:%02d pm: %s [%s]\n", hour_start, minute_start, hour_end - 12, minute_end, entry[n].summary, entry[n].location);
+			printf("%2d:%02d am to %2d:%02d pm: %s {{%s}}\n", hour_start, minute_start, hour_end - 12, minute_end, entry[n].summary, entry[n].location);
 		} else if (hour_start < 12 && hour_end == 12) {
-			printf("%2d:%02d am to %2d:%02d pm: %s [%s]\n", hour_start, minute_start, hour_end, minute_end, entry[n].summary, entry[n].location);
+			printf("%2d:%02d am to %2d:%02d pm: %s {{%s}}\n", hour_start, minute_start, hour_end, minute_end, entry[n].summary, entry[n].location);
 		} else if (hour_start == 12 && hour_end > 12) {
-			printf("%2d:%02d pm to %2d:%02d pm: %s [%s]\n", hour_start, minute_start, hour_end - 12, minute_end, entry[n].summary, entry[n].location);
+			printf("%2d:%02d pm to %2d:%02d pm: %s {{%s}}\n", hour_start, minute_start, hour_end - 12, minute_end, entry[n].summary, entry[n].location);
 		} else {
-			printf("%2d:%02d pm to %2d:%02d pm: %s [%s]\n", hour_start, minute_start, hour_end, minute_end, entry[n].summary, entry[n].location);
+			printf("%2d:%02d pm to %2d:%02d pm: %s {{%s}}\n", hour_start, minute_start, hour_end, minute_end, entry[n].summary, entry[n].location);
 		}
 	}
 }
