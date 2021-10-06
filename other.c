@@ -47,7 +47,7 @@ void dt_format(char *formatted_date, const char *dt_time, const int len) {
     strftime(formatted_date, len, "%B %d, %Y (%a)", localtime(&full_time));
 
 }
-
+//Creates dashes to calendar output
 void dateFormat(char* d, char* src) {
     char formattedDate[MAX_LINE_LEN];
     dt_format(formattedDate, src, MAX_LINE_LEN);
@@ -60,6 +60,7 @@ void dateFormat(char* d, char* src) {
     sprintf(d + strlen(d), "\n");
 }
 
+//Reads file line by line, and checks for repeating events
 void read(char* filename) {
     int event = 0;
     int i=0;
@@ -107,6 +108,7 @@ void read(char* filename) {
     fclose(calendar);
 }
 
+//helper function for sort function
 int compare(const void *one, const void *two) {
     const struct event_t* part1 = (struct event_t*)one;
   
@@ -115,6 +117,7 @@ int compare(const void *one, const void *two) {
     return strcmp(part1->DTSTART, part2->DTSTART);
 }
 
+//Create new date given date and number of weeks
 void add(char* newDate, char* date, int numWeeks) {
 
     char day[3];
@@ -135,7 +138,7 @@ void add(char* newDate, char* date, int numWeeks) {
     return;
 }
 
-
+//Deals with repeating events through weekly increments
 void repeating() {
     int num_events_curr = numEvents;
     for (int i=0; i < num_events_curr; i++) {
@@ -157,11 +160,12 @@ void repeating() {
     }
 }
 
-
+//Sorts order of events 
 void sort() {
     qsort(entry, numEvents, sizeof(struct event_t), compare);
 }
 
+//Formats the time
 void timeFormat(char* d, char* src) {
     char hourS[3];
     strncpy(hourS, src + 9, 2);
@@ -183,7 +187,7 @@ void timeFormat(char* d, char* src) {
     sprintf(d, "%2d:%02d %s", hour, min, am_or_pm);
 }
 
-
+//Prints out calendar events in a more readable format
 void print_events(int from_yy, int from_mm, int from_dd, int to_yy, int to_mm, int to_dd) {
  
     char from_date[MAX_LINE_LEN+1];
@@ -237,7 +241,9 @@ int main(int argc, char *argv[]) {
             argv[0]);
         exit(1);
     }
-
+    
+/* Start calling your own code from here */
+    
     read(filename);
     repeating();
     sort();
