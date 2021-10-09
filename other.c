@@ -114,7 +114,7 @@ int compare(const void *one, const void *two) {
   
     const struct event_t* part2 = (struct event_t*)two;
   
-    return strcmp(part1->DTSTART, part2->DTSTART);
+    return strcmp(part1->dt_start, part2->dt_start);
 }
 
 //Create new date given date and number of weeks
