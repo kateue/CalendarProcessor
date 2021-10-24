@@ -3,74 +3,56 @@
 import argparse
 import datetime as dt
 
-
+#reads file line by line, and checks for repeating events
 def read(filename):
-    '''
-    Read in the provided .ics file and populate the list of
-    dictionaries containing the necessary data for each event.
-    '''
-
-    file = open(filename, mode='r')
-
-    calendar = []
     check = False
+    calendar = []
+    file = open(filename, mode='r')
     for line in file:
-        # Event begins
+    
         if line == "BEGIN:VEVENT\n":
             check = True
             calendar.append({'REPEAT': False})
-        
-        # Get the event's start date
+       
         if check and line[:8] == "DTSTART:":
             calendar[-1]['DTSTART'] = line[8:-1]
 
-        # Get the event's end date
         if check and line[:6] == "DTEND:":
             calendar[-1]['DTEND'] = line[6:-1]
 
-        # Get the event's location
         if check and line[:9] == "LOCATION:":
             calendar[-1]['LOCATION'] = line[9:-1]
 
-        # Get the event's summary
         if check and line[:8] == "SUMMARY:":
             calendar[-1]['SUMMARY'] = line[8:-1]
 
-        # Check if event repeats
         if check and "UNTIL" in line:
             until_idx = line.find("UNTIL")
             calendar[-1]['UNTIL'] = line[until_idx+6 : until_idx+21]
             calendar[-1]['REPEAT'] = True
 
-        # End of event
         if line[:-1] == "END:VEVENT":
             check = False
     
     file.close()
     return calendar
 
-
-def expand(calendar):
-    '''
-    Expand repeating events by generating new events with
-    corresponding dates incremented by N weeks.
-    Extends the input array to include newly generated events.
-    '''
-
-    new_events = []
+#deals with repeating events through weekly incrememts
+def repeating(calendar):
+    numEvents = []
     for event in calendar:
         if event['REPEAT'] == True:
             # Get the dates on which the event occurs
-            repeat_dates = []
+            repeat = []
             dt_until = dt.datetime.strptime(event['UNTIL'][:8], '%Y%m%d')
             tmp = dt.datetime.strptime(event['DTSTART'][:8], '%Y%m%d') + dt.timedelta(weeks=1)
             while tmp <= dt_until:
-                repeat_dates.append(tmp)
+                repeat.append(tmp)
                 tmp += dt.timedelta(weeks=1)
 
             # Create a new event for each repeating date
-            for date in repeat_dates:
-                new_events.append({
+            for date in repeat:
+                numEvents.append({
                     'DTSTART': date.strftime('%Y%m%d') + event['DTSTART'][8:],
                     'DTEND': date.strftime('%Y%m%d') + event['DTEND'][8:],
                     'REPEAT': event['REPEAT'],
@@ -78,7 +60,7 @@ def expand(calendar):
                     'LOCATION': event['LOCATION'],
                     'SUMMARY': event['SUMMARY']
                 })
-    calendar.extend(new_events)
+    calendar.extend(numEvents)
     return calendar
 
 
@@ -159,7 +141,7 @@ def main():
     end_date = dt.datetime.strptime(args.end, '%Y/%m/%d')
 
     all_events = read(args.file)
-    all_events = expand(all_events)
+    all_events = repeating(all_events)
     all_events.sort(key= lambda event: event['DTSTART'])
 
     print(all_events, start_date, end_date)
