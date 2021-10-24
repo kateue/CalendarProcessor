@@ -50,7 +50,7 @@ def read(filename):
     return calendar
 
 
-def expand_events(calendar):
+def expand(calendar):
     '''
     Expand repeating events by generating new events with
     corresponding dates incremented by N weeks.
@@ -82,7 +82,7 @@ def expand_events(calendar):
     return calendar
 
 
-def format_date(date):
+def dateFormat(date):
     '''
     Takes a datetime object and formats it properly for output,
     adding dashes underneath the formatted date.
@@ -94,7 +94,7 @@ def format_date(date):
     return formatted_date
 
 
-def print_events(calendar, from_dt, to_dt):
+def print(calendar, from_dt, to_dt):
     '''
     Main output function
     '''
@@ -110,7 +110,7 @@ def print_events(calendar, from_dt, to_dt):
             if event_date != current_date:
                 if current_date is not None:
                     print()
-                print(format_date(event_date))
+                print(dateFormat(event_date))
                 current_date = event_date
             
             start_time = dt.datetime.strptime(event['DTSTART'][9:], '%H%M%S')
@@ -159,10 +159,10 @@ def main():
     end_date = dt.datetime.strptime(args.end, '%Y/%m/%d')
 
     all_events = read(args.file)
-    all_events = expand_events(all_events)
+    all_events = expand(all_events)
     all_events.sort(key= lambda event: event['DTSTART'])
 
-    print_events(all_events, start_date, end_date)
+    print(all_events, start_date, end_date)
 
 
 if __name__ == "__main__":
