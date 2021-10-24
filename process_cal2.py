@@ -13,38 +13,38 @@ def read(filename):
     file = open(filename, mode='r')
 
     calendar = []
-    in_event = False
+    check = False
     for line in file:
         # Event begins
         if line == "BEGIN:VEVENT\n":
-            in_event = True
+            check = True
             calendar.append({'REPEAT': False})
         
         # Get the event's start date
-        if in_event and line[:8] == "DTSTART:":
+        if check and line[:8] == "DTSTART:":
             calendar[-1]['DTSTART'] = line[8:-1]
 
         # Get the event's end date
-        if in_event and line[:6] == "DTEND:":
+        if check and line[:6] == "DTEND:":
             calendar[-1]['DTEND'] = line[6:-1]
 
         # Get the event's location
-        if in_event and line[:9] == "LOCATION:":
+        if check and line[:9] == "LOCATION:":
             calendar[-1]['LOCATION'] = line[9:-1]
 
         # Get the event's summary
-        if in_event and line[:8] == "SUMMARY:":
+        if check and line[:8] == "SUMMARY:":
             calendar[-1]['SUMMARY'] = line[8:-1]
 
         # Check if event repeats
-        if in_event and "UNTIL" in line:
+        if check and "UNTIL" in line:
             until_idx = line.find("UNTIL")
             calendar[-1]['UNTIL'] = line[until_idx+6 : until_idx+21]
             calendar[-1]['REPEAT'] = True
 
         # End of event
         if line[:-1] == "END:VEVENT":
-            in_event = False
+            check = False
     
     file.close()
     return calendar
